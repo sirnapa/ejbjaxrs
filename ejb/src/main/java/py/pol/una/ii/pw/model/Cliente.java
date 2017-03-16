@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 
-@Entity
+@Entity //anotation 
 @XmlRootElement
 @Table(name = "Cliente")
 public class Cliente implements Serializable{
