@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 //import javax.persistence.OneToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.JoinColumn;
 
 @Entity
@@ -27,25 +28,41 @@ public class CompraCabecera implements Serializable{
 	@JoinColumn(name="id_proveedor")
 	private Proveedor proveedor;
 	
+	@OneToMany(mappedBy = "compraCabecera")
+	private Collection<CompraDetalle> detalles;
+	
 	private Date fecha;
 	private Float monto;
 	
 
+	public Collection<CompraDetalle> getDetalles() {
+		return detalles;
+	}
+
+	public void setDetalles(Collection<CompraDetalle> detalles) {
+		this.detalles = detalles;
+	}
+
 	public Long getId_compraCabecera() {
 		return id_compraCabecera;
 	}
+
 	public void setId_compraCabecera(Long id_compraCabecera) {
 		this.id_compraCabecera = id_compraCabecera;
 	}
+
 	public Proveedor getProveedor() {
 		return proveedor;
 	}
+
 	public void setProveedor(Proveedor proveedor) {
 		this.proveedor = proveedor;
 	}
+
 	public Date getFecha() {
 		return fecha;
 	}
+
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}

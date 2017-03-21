@@ -25,7 +25,6 @@ import py.pol.una.ii.pw.service.CompraRegistration;
 /**
  * JAX-RS Example
  * <p/>
- * This class produces a RESTful service to read/write the contents of the ventaCabecera and ventaDetalle table.
  */
 @Path("/compras")
 @RequestScoped
@@ -65,28 +64,71 @@ public class CompraResourceRESTService {
     public Response registrarCompra(ArrayList<CompraDetalle> lista) {
     	Response.ResponseBuilder builder = null;
         try {
-        	//crea una cabecera para los detalles recibidos en lista
-        	CompraCabecera compraCabecera = new CompraCabecera();
-        	if (lista.size()>0) {
-        		compraCabecera.setProveedor(lista.get(0).getCompraCabecera().getProveedor());
-        	}
-        	//guarda esta cabecera para poder asociarle su detalle
-            registration.registerCompraCabecera(compraCabecera);
-            Float montoTotal = 0.0F;
-            CompraDetalle detalle;
-            //itera en la lista de detalles guardando uno por uno
-            for(int x=0;x<lista.size();x++) {
-            	detalle= lista.get(x);
-            	montoTotal = (detalle.getProducto().getPrecioCompra() * detalle.getCantidad()) + montoTotal;
-            	detalle.setCompraCabecera(compraCabecera);
-            	registration.registerCompraDetalle(detalle);
-            	}
-            
-            //actualiza la cabecera 
-            compraCabecera.setFecha(new java.util.Date());
-            compraCabecera.setMonto(montoTotal);
-            registration.updateCompraCabecera(compraCabecera);
-
+        	registration.registerCompraCabecera(lista);
+            // Create an "ok" response
+            builder = Response.ok();
+        } catch (ConstraintViolationException ce){
+        	log.info(ce.getMessage());
+        }
+        return builder.build();
+    }
+    
+    @POST
+    @Path("/agregarItem")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response agregarItemCompra(ArrayList<CompraDetalle> lista) {
+    	Response.ResponseBuilder builder = null;
+        try {
+        	registration.registerCompraCabecera(lista);
+            // Create an "ok" response
+            builder = Response.ok();
+        } catch (ConstraintViolationException ce){
+        	log.info(ce.getMessage());
+        }
+        return builder.build();
+    }
+    
+    @POST
+    @Path("/eliminarItem")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response eliminarItemCompra(ArrayList<CompraDetalle> lista) {
+    	Response.ResponseBuilder builder = null;
+        try {
+        	registration.registerCompraCabecera(lista);
+            // Create an "ok" response
+            builder = Response.ok();
+        } catch (ConstraintViolationException ce){
+        	log.info(ce.getMessage());
+        }
+        return builder.build();
+    }
+    
+    @POST
+    @Path("/cancelarCompra")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response cancelarCompra(ArrayList<CompraDetalle> lista) {
+    	Response.ResponseBuilder builder = null;
+        try {
+        	registration.cancelarCompra();
+            // Create an "ok" response
+            builder = Response.ok();
+        } catch (ConstraintViolationException ce){
+        	log.info(ce.getMessage());
+        }
+        return builder.build();
+    }
+    
+    @POST
+    @Path("/confirmarCompra")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response confirmarCompra(ArrayList<CompraDetalle> lista) {
+    	Response.ResponseBuilder builder = null;
+        try {
+        	registration.confirmarCompra();
             // Create an "ok" response
             builder = Response.ok();
         } catch (ConstraintViolationException ce){
