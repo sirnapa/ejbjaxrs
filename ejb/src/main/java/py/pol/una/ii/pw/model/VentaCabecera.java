@@ -1,6 +1,7 @@
 package py.pol.una.ii.pw.model;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -9,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.JoinColumn;
 
 @Entity
@@ -25,8 +27,19 @@ public class VentaCabecera implements Serializable{
 	@JoinColumn(name="id_cliente")
 	private Cliente cliente;
 	
+	@OneToMany(mappedBy = "ventaCabecera")
+	private Collection<VentaDetalle> detalles;
+	
 	private Date fecha;
 	private Float monto;
+
+	public Collection<VentaDetalle> getDetalles() {
+		return detalles;
+	}
+
+	public void setDetalles(Collection<VentaDetalle> detalles) {
+		this.detalles = detalles;
+	}
 
 	public Long getId_ventaCabecera() {
 		return id_ventaCabecera;

@@ -18,6 +18,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import py.pol.una.ii.pw.data.VentaRepository;
+import py.pol.una.ii.pw.model.CompraCabecera;
+import py.pol.una.ii.pw.model.CompraDetalle;
 import py.pol.una.ii.pw.model.VentaCabecera;
 import py.pol.una.ii.pw.model.VentaDetalle;
 import py.pol.una.ii.pw.service.ClienteRegistration;
@@ -61,37 +63,79 @@ public class VentaResourceRESTService {
         }
         return venta;
     }
-
+    
     @POST
+    @Path("/iniciarVenta")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response registrarVenta(ArrayList<VentaDetalle> lista) {
+    public Response registrarVenta(VentaCabecera ventaCab) {
     	Response.ResponseBuilder builder = null;
         try {
-        	VentaCabecera ventaCabecera = new VentaCabecera();
-        	if (lista.size()>0) {
-        		ventaCabecera.setCliente(lista.get(0).getVentaCabecera().getCliente());
-        	}
-            registration.registerVentaCabecera(ventaCabecera);
-            Float montoTotal = 0.0F;
-            VentaDetalle detalle;
-            for(int x=0;x<lista.size();x++) {
-            	detalle= lista.get(x);
-            	montoTotal = (detalle.getProducto().getPrecioVenta() * detalle.getCantidad()) + montoTotal;
-            	detalle.setVentaCabecera(ventaCabecera);
-            	registration.registerVentaDetalle(detalle);
-            	}
-            
-            ventaCabecera.setFecha(new java.util.Date());
-            ventaCabecera.setMonto(montoTotal);
-            
-            //Actualizar la deuda del cliente
-            Float deuda = ventaCabecera.getCliente().getSaldoDeuda() + montoTotal;
-        	ventaCabecera.getCliente().setSaldoDeuda(deuda);
-            clienteRegistration.updateCliente(ventaCabecera.getCliente());
-            //Actualizar la cabecera
-            registration.updateVentaCabecera(ventaCabecera);
+        	registration.iniciarVenta(ventaCab);
+            // Create an "ok" response
+            builder = Response.ok();
+        } catch (ConstraintViolationException ce){
+        	log.info(ce.getMessage());
+        }
+        return builder.build();
+    }
 
+    @POST
+    @Path("/agregarItem")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response agregarItemVenta(ArrayList<VentaDetalle> lista) {
+    	Response.ResponseBuilder builder = null;
+        try {
+        	registration.agregarItem(lista);
+            // Create an "ok" response
+            builder = Response.ok();
+        } catch (ConstraintViolationException ce){
+        	log.info(ce.getMessage());
+        }
+        return builder.build();
+    }
+    
+    @POST
+    @Path("/eliminarItem")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response eliminarItemVenta(VentaDetalle item) {
+    	Response.ResponseBuilder builder = null;
+        try {
+        	registration.eliminarItem(item);
+             //Create an "ok" response
+            builder = Response.ok();
+        } catch (ConstraintViolationException ce){
+        	log.info(ce.getMessage());
+        }
+        return builder.build();
+    }
+    
+    @POST
+    @Path("/cancelarVenta")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response cancelarCompra(ArrayList<CompraDetalle> lista) {
+    	Response.ResponseBuilder builder = null;
+        try {
+        	registration.cancelarVenta();
+            // Create an "ok" response
+            builder = Response.ok();
+        } catch (ConstraintViolationException ce){
+        	log.info(ce.getMessage());
+        }
+        return builder.build();
+    }
+    
+    @POST
+    @Path("/confirmarVenta")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response confirmarCompra(ArrayList<CompraDetalle> lista) {
+    	Response.ResponseBuilder builder = null;
+        try {
+        	registration.confirmarVenta();
             // Create an "ok" response
             builder = Response.ok();
         } catch (ConstraintViolationException ce){

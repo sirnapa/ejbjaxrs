@@ -59,12 +59,13 @@ public class CompraResourceRESTService {
 
     
     @POST
+    @Path("/iniciarCompra")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response registrarCompra(ArrayList<CompraDetalle> lista) {
+    public Response registrarCompra(CompraCabecera compraCab) {
     	Response.ResponseBuilder builder = null;
         try {
-        	registration.registerCompraCabecera(lista);
+        	registration.iniciarCompra(compraCab);
             // Create an "ok" response
             builder = Response.ok();
         } catch (ConstraintViolationException ce){
@@ -80,7 +81,7 @@ public class CompraResourceRESTService {
     public Response agregarItemCompra(ArrayList<CompraDetalle> lista) {
     	Response.ResponseBuilder builder = null;
         try {
-        	registration.registerCompraCabecera(lista);
+        	registration.agregarItem(lista);
             // Create an "ok" response
             builder = Response.ok();
         } catch (ConstraintViolationException ce){
@@ -93,11 +94,11 @@ public class CompraResourceRESTService {
     @Path("/eliminarItem")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response eliminarItemCompra(ArrayList<CompraDetalle> lista) {
+    public Response eliminarItemCompra(CompraDetalle item) {
     	Response.ResponseBuilder builder = null;
         try {
-        	registration.registerCompraCabecera(lista);
-            // Create an "ok" response
+        	registration.eliminarItem(item);
+             //Create an "ok" response
             builder = Response.ok();
         } catch (ConstraintViolationException ce){
         	log.info(ce.getMessage());

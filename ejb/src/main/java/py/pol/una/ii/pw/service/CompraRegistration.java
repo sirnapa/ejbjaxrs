@@ -1,20 +1,14 @@
 package py.pol.una.ii.pw.service;
 
-import py.pol.una.ii.pw.model.CompraCabecera;
-import py.pol.una.ii.pw.model.CompraDetalle;
-
-import  java.util.concurrent.TimeUnit;
+import java.util.List;
+import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
-import javax.ejb.EJBContext;
 import javax.ejb.Remove;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateful;
-import javax.ejb.StatefulTimeout;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.enterprise.context.SessionScoped;
@@ -23,7 +17,6 @@ import javax.inject.Inject;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.InvalidTransactionException;
@@ -32,10 +25,9 @@ import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
-import javax.transaction.UserTransaction;
 
-import java.util.List;
-import java.util.logging.Logger;
+import py.pol.una.ii.pw.model.CompraCabecera;
+import py.pol.una.ii.pw.model.CompraDetalle;
 
 @Stateful
 @SessionScoped
@@ -65,8 +57,8 @@ public class CompraRegistration {
 	private int contador=0;
 	private Transaction transaction;
 	
+	 public void iniciarCompra(CompraCabecera compraCab) {
 
-    public void registerCompraCabecera(List <CompraDetalle> compraDetalleList) {
 		try {
 			tm.begin();
 		} catch (NotSupportedException e) {
@@ -76,29 +68,56 @@ public class CompraRegistration {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		///// prueba
-    	contador = contador+1;
-    	log.info("VALOR DEL CONTADOR ="+contador);
-    	////fin prueba
-    	
-    	//crea una cabecera para los detalles recibidos en lista si es la primera vez que se le llama
-		if (compraCabecera == null) {
-			compraCabecera = new CompraCabecera();
-			if (compraDetalleList.size() > 0) {
-				compraCabecera.setProveedor(compraDetalleList.get(0).getCompraCabecera().getProveedor());
-			}
-	    	em.persist(compraCabecera); //guarda esta cabecera para luego poder asociarle su detalle
+		compraCabecera = new CompraCabecera();
+		compraCabecera.setProveedor(compraCab.getProveedor());
+		em.persist(compraCabecera); // guarda esta cabecera para luego poder agregarle su detalle
+		log.info("Registering Compra" + compraCabecera.getId_compraCabecera());
+		try {
+			transaction = tm.suspend();
+		} catch (SystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-  
+	 }
+	 
+    public void agregarItem(List <CompraDetalle> compraDetalleList) {
+		///// prueba
+		contador = contador + 1;
+		log.info("VALOR DEL CONTADOR =" + contador);
+		//// fin prueba
+		try {
+			tm.resume(transaction);
+		} catch (InvalidTransactionException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IllegalStateException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (SystemException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
         Float montoTotal = 0.0F;
         CompraDetalle detalle;
-        //itera en la lista de detalles guardando uno por uno
-        for(int x=0;x<compraDetalleList.size();x++) {
-        	detalle= compraDetalleList.get(x);
-        	montoTotal = (detalle.getProducto().getPrecioCompra() * detalle.getCantidad()) + montoTotal;
-        	detalle.setCompraCabecera(compraCabecera);
-        	registerCompraDetalle(detalle);
-        	}
+		if (compraCabecera.getDetalles() == null) {
+			compraCabecera.setDetalles(compraDetalleList);
+			for (int i = 0; i < compraDetalleList.size(); i++) {
+				detalle = compraDetalleList.get(i);
+				montoTotal = (detalle.getProducto().getPrecioCompra() * detalle.getCantidad()) + montoTotal;
+				detalle.setCompraCabecera(compraCabecera);
+				registerCompraDetalle(detalle);
+			}
+		} else {
+			// itera en la lista de detalles guardando uno por uno
+			for (int i = 0; i < compraDetalleList.size(); i++) {
+				detalle = compraDetalleList.get(i);
+				montoTotal = (detalle.getProducto().getPrecioCompra() * detalle.getCantidad()) + montoTotal;
+				detalle.setCompraCabecera(compraCabecera);
+				registerCompraDetalle(detalle);
+				compraCabecera.getDetalles().add(detalle);
+			}
+		}
         
         //actualiza la cabecera 
         compraCabecera.setFecha(new java.util.Date());
@@ -114,9 +133,38 @@ public class CompraRegistration {
     }
     
     public void updateCompraCabecera(CompraCabecera compraCabecera) {
-    	log.info("Registering Compra" + compraCabecera.getId_compraCabecera());
+    	log.info("Updated Compra" + compraCabecera.getId_compraCabecera());
     	em.merge(compraCabecera);
     	compraCabeceraEventSrc.fire(compraCabecera);
+    }
+    
+    public void eliminarItem(CompraDetalle compraDetalle) {
+    	
+		try {
+			tm.resume(transaction);
+		} catch (InvalidTransactionException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IllegalStateException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (SystemException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+    	log.info("Deleted Detalle" + compraDetalle.getId_compraDetalle());
+    		CompraDetalle remover = em.find(CompraDetalle.class, compraDetalle.getId_compraDetalle());
+    	     em.remove(remover);
+    	     compraCabecera.getDetalles().remove(compraDetalle);
+    	     updateCompraCabecera(compraCabecera);
+    	
+        try {
+			transaction = tm.suspend();
+		} catch (SystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
     public void registerCompraDetalle(CompraDetalle compraDetalle){
