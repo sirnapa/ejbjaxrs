@@ -52,6 +52,7 @@
             <artifactId>EjbJaxRS-ejb</artifactId>
             <type>ejb</type>
         </dependency>
+        
     </dependencies>
 
     <build>

@@ -11,11 +11,17 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 //import javax.persistence.OneToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.JoinColumn;
 
 @Entity
-@Table(name = "Compras_Cab")
+@NamedQueries( {
+    @NamedQuery( name = "CompraCabecera.listAll", query = "SELECT u FROM CompraCabecera u" ),
+    @NamedQuery( name = "CompraCabecera.queryRecordsSize", query = "SELECT count(u) FROM CompraCabecera u" )
+} )
+@Table(name = "compras_cab")
 public class CompraCabecera implements Serializable{
 	/** Default value included to remove warning. Remove or modify at will. **/
     private static final long serialVersionUID = 1L;
