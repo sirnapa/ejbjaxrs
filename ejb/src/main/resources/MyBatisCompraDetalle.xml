@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="compraDetalle">
+
+	<insert id="insertCompraDet" parameterType="CompraDetalle"
+		timeout="10" useGeneratedKeys="true">
+
+		<selectKey keyProperty="id_compraDetalle" resultType="long"
+			order="BEFORE">
+			SELECT nextVal('hibernate_sequence')
+		</selectKey>
+
+		insert into compras_det
+		(id_compraDetalle,id_producto,id_compraCabecera, cantidad)
+		values
+		(#{id_compraDetalle},#{producto.id},#{compraCabecera.id_compraCabecera},#{cantidad})
+
+	</insert>
+	<select id="selectAllCompraDet" resultType="CompraDetalle">
+		select id_compraDetalle,id_producto,id_compraCabecera, cantidad from
+		compras_det
+	</select>
+	<delete id="deleteCompraDetalleById" parameterType="long">
+		DELETE from
+		compras_det WHERE id_compradetalle = #{id};
+	</delete>
+</mapper>

@@ -22,9 +22,15 @@ import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
+import org.apache.ibatis.session.SqlSession;
+
 import java.util.List;
 
+import py.pol.una.ii.pw.model.CompraCabecera;
+import py.pol.una.ii.pw.model.Producto;
 import py.pol.una.ii.pw.model.Proveedor;
+import py.pol.una.ii.pw.util.MyBatisSqlSessionFactory;
 
 @ApplicationScoped
 public class ProveedorRepository {
@@ -33,18 +39,21 @@ public class ProveedorRepository {
     private EntityManager em;
 
     public Proveedor findById(Long id) {
-        return em.find(Proveedor.class, id);
+    	SqlSession session = MyBatisSqlSessionFactory.getSqlSessionFactory().openSession();
+        Proveedor prov = session.selectOne("getProveedorById",id);
+        return prov;
+        //return em.find(Proveedor.class, id);
     }
 
     public List<Proveedor> findAllOrderedByName() {
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Proveedor> criteria = cb.createQuery(Proveedor.class);
-        Root<Proveedor> producto = criteria.from(Proveedor.class);
-        // Swap criteria statements if you would like to try out type-safe criteria queries, a new
-        // feature in JPA 2.0
-        // criteria.select(producto).orderBy(cb.asc(producto.get(Proveedor_.name)));
-        criteria.select(producto).orderBy(cb.asc(producto.get("nombre")));
-        return em.createQuery(criteria).getResultList();
+    	SqlSession session = MyBatisSqlSessionFactory.getSqlSessionFactory().openSession();
+        List<Proveedor> proveedores = session.selectList("selectAllProveedores", null);
+        return proveedores;
+//        CriteriaBuilder cb = em.getCriteriaBuilder();
+//        CriteriaQuery<Proveedor> criteria = cb.createQuery(Proveedor.class);
+//        Root<Proveedor> producto = criteria.from(Proveedor.class);
+//        criteria.select(producto).orderBy(cb.asc(producto.get("nombre")));
+//        return em.createQuery(criteria).getResultList();
     }
 
 }

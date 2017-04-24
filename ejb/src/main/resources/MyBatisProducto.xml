@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="producto">
+	<!-- <insert id="insertTest" parameterType="Producto" useGeneratedKeys="true" 
+		keyProperty="id" keyColumn="id"> -->
+	<!-- insert into producto (cantidad,nombre,precioCompra,precioVenta) -->
+	<!-- values (#{cantidad},#{nombre},#{precioCompra},#{precioVenta}) -->
+	<!-- </insert> -->
+
+	<insert id="insertTest" parameterType="Producto" timeout="10"
+		useGeneratedKeys="true">
+
+		<selectKey keyProperty="id" resultType="long" order="BEFORE">
+			SELECT nextVal('hibernate_sequence')
+			<!-- or -> SELECT my_sequence.nextVal from dual -->
+		</selectKey>
+
+		insert into producto (id,cantidad,nombre,precioCompra,precioVenta)
+		values (#{id},#{cantidad},#{nombre},#{precioCompra},#{precioVenta})
+
+	</insert>
+	<select id="selectAll" resultType="Producto">
+		select
+		id,cantidad,nombre,precioCompra,precioVenta from producto
+	</select>
+	<delete id="deleteProductoById" parameterType="long">
+		DELETE from
+		producto WHERE id = #{id};
+	</delete>
+	<update id="updateProducto" parameterType="Producto">
+		UPDATE producto SET nombre = #{nombre},
+		preciocompra = #{precioCompra},
+		precioventa = #{precioVenta},
+		cantidad = #{cantidad}
+		WHERE id = #{id};
+	</update>
+		<select id="getProductoById" parameterType='long' resultType="Producto">
+		SELECT * from producto
+		WHERE id = #{id};
+	</select>
+</mapper>

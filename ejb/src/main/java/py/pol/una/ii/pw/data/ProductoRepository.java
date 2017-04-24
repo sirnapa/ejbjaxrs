@@ -22,9 +22,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
+import org.apache.ibatis.session.SqlSession;
+
 import java.util.List;
 
 import py.pol.una.ii.pw.model.Producto;
+import py.pol.una.ii.pw.model.Proveedor;
+import py.pol.una.ii.pw.util.MyBatisSqlSessionFactory;
 
 @ApplicationScoped
 public class ProductoRepository {
@@ -33,18 +38,24 @@ public class ProductoRepository {
     private EntityManager em;
 
     public Producto findById(Long id) {
-        return em.find(Producto.class, id);
+    	SqlSession session = MyBatisSqlSessionFactory.getSqlSessionFactory().openSession();
+        Producto pro = session.selectOne("getProductoById",id);
+        return pro;
+        //return em.find(Producto.class, id);
     }
 
     public List<Producto> findAllOrderedByName() {
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Producto> criteria = cb.createQuery(Producto.class);
-        Root<Producto> producto = criteria.from(Producto.class);
-        // Swap criteria statements if you would like to try out type-safe criteria queries, a new
-        // feature in JPA 2.0
-        // criteria.select(producto).orderBy(cb.asc(producto.get(Producto_.name)));
-        criteria.select(producto).orderBy(cb.asc(producto.get("nombre")));
-        return em.createQuery(criteria).getResultList();
-    }
-
+    	
+    	SqlSession session = MyBatisSqlSessionFactory.getSqlSessionFactory().openSession();
+        List<Producto> productos = session.selectList("selectAll", null);
+        return productos;
 }
+//        CriteriaBuilder cb = em.getCriteriaBuilder();
+//        CriteriaQuery<Producto> criteria = cb.createQuery(Producto.class);
+//        Root<Producto> producto = criteria.from(Producto.class);
+//        // Swap criteria statements if you would like to try out type-safe criteria queries, a new
+//        // feature in JPA 2.0
+//        // criteria.select(producto).orderBy(cb.asc(producto.get(Producto_.name)));
+//        criteria.select(producto).orderBy(cb.asc(producto.get("nombre")));
+//        return em.createQuery(criteria).getResultList();
+    }

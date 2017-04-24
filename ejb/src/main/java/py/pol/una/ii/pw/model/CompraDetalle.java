@@ -18,7 +18,7 @@ public class CompraDetalle implements Serializable{
     
     @Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id_compraDetalle;
+	private Long id_compraDetalle;
 	
 	@ManyToOne
 	@JoinColumn(name="id_producto")
@@ -30,11 +30,11 @@ public class CompraDetalle implements Serializable{
     @JoinColumn(name = "id_compraCabecera")
 	private CompraCabecera compraCabecera;
 	
-	public Integer getId_compraDetalle() {
+	public Long getId_compraDetalle() {
 		return id_compraDetalle;
 	}
 
-	public void setId_compraDetalle(Integer id_compraDetalle) {
+	public void setId_compraDetalle(Long id_compraDetalle) {
 		this.id_compraDetalle = id_compraDetalle;
 	}
 

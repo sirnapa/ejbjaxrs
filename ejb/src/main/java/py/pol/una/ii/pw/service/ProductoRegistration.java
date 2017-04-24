@@ -17,12 +17,16 @@
 package py.pol.una.ii.pw.service;
 
 
+import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import org.apache.ibatis.session.SqlSession;
+
 import py.pol.una.ii.pw.model.Producto;
+import py.pol.una.ii.pw.util.MyBatisSqlSessionFactory;
 
 import java.util.logging.Logger;
 
@@ -38,30 +42,50 @@ public class ProductoRegistration {
 
     @Inject
     private Event<Producto> productoEventSrc;
+    
+	private SqlSession session;
+    @PostConstruct
+    void init(){
+    	session = MyBatisSqlSessionFactory.getSqlSessionFactory().openSession();
+    }
+    
 
     public void register(Producto producto) throws Exception {
     	log.info("Registering " + producto.getNombre());
-        em.persist(producto);
-        productoEventSrc.fire(producto);
+    	
+		try {
+			int insertSuccess = session.insert("insertTest", producto);
+			session.commit();
+		} catch (Exception e) {
+			log.info(e.toString());
+		}
     }
     
     public Producto deleteProducto(Long id){
-    	Producto producto = em.find(Producto.class, id);
-    	if (producto!=null){
-        	log.info("Deleting " + producto.getNombre());
-    		em.remove(producto);
-    	}
-    	return producto;
+    	
+        session.delete("deleteProductoById", id);     
+       
+          
+//    	Producto producto = em.find(Producto.class, id);
+//    	if (producto!=null){
+//        	log.info("Deleting " + producto.getNombre());
+//    		em.remove(producto);
+//    	}
+    	return null;
 
     }
     
     public Producto updateProducto(Producto producto){
-    	Producto productoAnterior = em.find(Producto.class, producto.getId());
-    	if (productoAnterior!=null){
-        	log.info("Updated " + productoAnterior.getNombre());
-        	producto.setId(productoAnterior.getId());        			
-    		em.merge(producto);
-    	}
-    	return producto;
+    	
+        session.update("updateProducto", producto);     
+       
+          
+//    	Producto productoAnterior = em.find(Producto.class, producto.getId());
+//    	if (productoAnterior!=null){
+//        	log.info("Updated " + productoAnterior.getNombre());
+//        	producto.setId(productoAnterior.getId());        			
+//    		em.merge(producto);
+//    	}
+    	return null;
     }
 }

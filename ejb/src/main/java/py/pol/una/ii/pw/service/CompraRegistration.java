@@ -26,8 +26,11 @@ import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
+import org.apache.ibatis.session.SqlSession;
+
 import py.pol.una.ii.pw.model.CompraCabecera;
 import py.pol.una.ii.pw.model.CompraDetalle;
+import py.pol.una.ii.pw.util.MyBatisSqlSessionFactory;
 
 @Stateful
 @SessionScoped
@@ -57,10 +60,13 @@ public class CompraRegistration {
 	private int contador=0;
 	private Transaction transaction;
 	
+	private SqlSession session;
+    
 	 public void iniciarCompra(CompraCabecera compraCab) {
-
+		 int insertCab;
 		try {
 			tm.begin();
+	    	//SqlSession session = MyBatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		} catch (NotSupportedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -70,7 +76,8 @@ public class CompraRegistration {
 		}
 		compraCabecera = new CompraCabecera();
 		compraCabecera.setProveedor(compraCab.getProveedor());
-		em.persist(compraCabecera); // guarda esta cabecera para luego poder agregarle su detalle
+		insertCab = session.insert("insertCompraCab", compraCabecera);
+		//em.persist(compraCabecera); // guarda esta cabecera para luego poder agregarle su detalle
 		log.info("Registering Compra" + compraCabecera.getId_compraCabecera());
 		try {
 			transaction = tm.suspend();
@@ -134,7 +141,8 @@ public class CompraRegistration {
     
     public void updateCompraCabecera(CompraCabecera compraCabecera) {
     	log.info("Updated Compra" + compraCabecera.getId_compraCabecera());
-    	em.merge(compraCabecera);
+    	int insertSuccess = session.update("updateCompraCab", compraCabecera);
+    	//em.merge(compraCabecera);
     	compraCabeceraEventSrc.fire(compraCabecera);
     }
     
@@ -155,7 +163,8 @@ public class CompraRegistration {
 		
     	log.info("Deleted Detalle" + compraDetalle.getId_compraDetalle());
     		CompraDetalle remover = em.find(CompraDetalle.class, compraDetalle.getId_compraDetalle());
-    	     em.remove(remover);
+    	     //em.remove(remover);
+    		 session.delete("deleteCompraDetalleById", remover.getId_compraDetalle()); 
     	     compraCabecera.getDetalles().remove(compraDetalle);
     	     updateCompraCabecera(compraCabecera);
     	
@@ -168,7 +177,8 @@ public class CompraRegistration {
     }
     
     public void registerCompraDetalle(CompraDetalle compraDetalle){
-    	em.persist(compraDetalle);
+    	int insertCab = session.insert("insertCompraDet", compraDetalle);
+    	//em.persist(compraDetalle);
     	log.info("Registering Detalle" + compraDetalle.getId_compraDetalle());
     	compraDetalleEventSrc.fire(compraDetalle);
     }
@@ -246,6 +256,7 @@ public class CompraRegistration {
 	@PostConstruct
 	public void postConstruct() throws NamingException {
 		InitialContext ctx = new InitialContext();
+		session = MyBatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
 	        // JBoss
 	        tm= (TransactionManager)

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="compraCabecera">
+
+	<resultMap type="Proveedor" id="ProveedorResult">
+		<id property="id" column="id_proveedor" />
+		<result property="nombre" column="nombre" />
+		<result property="ci" column="ci" />
+	</resultMap>
+
+	<resultMap type="Producto" id="ProductoResult">
+		<id property="id" column="id" />
+		<result property="nombre" column="nombre" />
+		<result property="precioVenta" column="precioventa" />
+		<result property="precioCompra" column="preciocompra" />
+		<result property="cantidad" column="cantidad" />
+	</resultMap>
+
+	<resultMap type="CompraDetalle" id="CompraDetalleResult">
+		<id property="id_compraDetalle" column="id_compraDetalle" />
+		<result property="cantidad" column="cantidad" />
+		<association property="producto" resultMap="ProductoResult" />
+	</resultMap>
+
+	<resultMap type="CompraCabecera" id="CabeceraResult">
+		<id property="id_compraCabecera" column="id_compraCabecera" />
+		<result property="fecha" column="fecha" />
+		<result property="monto" column="monto" />
+		<association property="proveedor" resultMap="ProveedorResult" />
+		<association property="detalles" resultMap="CompraDetalleResult" />
+	</resultMap>
+
+	<insert id="insertCompraCab" parameterType="CompraCabecera"
+		timeout="10" useGeneratedKeys="true">
+
+		<selectKey keyProperty="id_compraCabecera" resultType="long"
+			order="BEFORE">
+			SELECT nextVal('hibernate_sequence')
+		</selectKey>
+
+		insert into compras_cab (id_compraCabecera,id_proveedor,monto,fecha)
+		values (#{id_compraCabecera},#{proveedor.id},#{monto},#{fecha})
+
+	</insert>
+	<select id="selectAllCompraCab" resultMap="CabeceraResult">
+		SELECT
+		c.id_compraCabecera, pr.id, pr.nombre, pr.preciocompra,
+		pr.precioventa,p.id_proveedor, p.ci, p.nombre, c.monto, c.fecha,
+		d.id_compraDetalle, d.cantidad
+		FROM compras_cab
+		c
+		INNER
+		JOIN proveedor p
+		ON c.id_proveedor =
+		p.id_proveedor
+		INNER JOIN
+		compras_det d
+		ON
+		c.id_compracabecera =
+		d.id_compracabecera
+		INNER JOIN
+		producto pr
+		ON
+		d.id_producto =
+		pr.id;
+	</select>
+	<select id="getCompraById" parameterType='long' resultMap="CabeceraResult">
+		SELECT
+		c.id_compraCabecera, pr.id, pr.nombre, pr.preciocompra,
+		pr.precioventa,p.id_proveedor, p.ci, p.nombre, c.monto, c.fecha,
+		d.id_compraDetalle, d.cantidad
+		FROM compras_cab
+		c
+		INNER
+		JOIN proveedor p
+		ON c.id_proveedor =
+		p.id_proveedor
+		INNER JOIN
+		compras_det d
+		ON
+		c.id_compracabecera =
+		d.id_compracabecera
+		INNER JOIN
+		producto pr
+		ON
+		d.id_producto =
+		pr.id
+		 WHERE c.id_compracabecera = #{id};
+	</select>
+	<select id="selectCompraDet" parameterType='long' resultMap="CompraDetalleResult">
+		SELECT * from compras_det where id_compracabecera = #{id};
+	</select>
+	<update id="updateCompraCab" parameterType="CompraCabecera">
+
+	update compras_cab
+	set
+	fecha= #{fecha},
+	monto= #{monto},
+	id_proveedor= #{proveedor.id}
+	where
+	id_compracabecera= #{id_compraCabecera}
+
+	</update>
+	<delete id="deleteCompraById" parameterType="long">
+		DELETE from
+		compras_cab WHERE id_compracabecera = #{id};
+	</delete>
+</mapper>

@@ -19,9 +19,12 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
@@ -38,6 +41,8 @@ import javax.transaction.SystemException;
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
 
+import org.apache.ibatis.session.SqlSession;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -45,10 +50,11 @@ import py.pol.una.ii.pw.data.ProductoRepository;
 import py.pol.una.ii.pw.data.ProveedorRepository;
 import py.pol.una.ii.pw.model.CompraCabecera;
 import py.pol.una.ii.pw.model.Proveedor;
+import py.pol.una.ii.pw.util.MyBatisSqlSessionFactory;
 import py.pol.una.ii.pw.model.CompraDetalle;
 
 @Stateless
-@TransactionManagement(TransactionManagementType.BEAN)
+@TransactionManagement(TransactionManagementType.CONTAINER)
 public class CompraMasiva {
 
 	@Resource(name = "java:/PostgresDS")
@@ -73,7 +79,16 @@ public class CompraMasiva {
 	@Resource
 	UserTransaction tx;
 
+	private SqlSession session;
+    @PostConstruct
+    void init(){
+    	session = MyBatisSqlSessionFactory.getSqlSessionFactory().openSession();
+    }
+    
+	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	public File getAllCompras() throws SQLException, NamingException, IOException {
+		
+		//SqlSession session = MyBatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		getUserTransaction();
 		File archivoIntermedio;
 
@@ -141,22 +156,9 @@ public class CompraMasiva {
 		}
 	}
 
+	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	public void compraMasiva(FileReader fr, String filename) throws IOException {
-		try {
-			getUserTransaction();
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			tx.begin();
-		} catch (NotSupportedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SystemException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		log.info("INICIO");
 		System.out.println("MEMORIA TOTAL= " + ((Runtime.getRuntime().totalMemory()) / mb));
 		System.out.println(
@@ -167,24 +169,25 @@ public class CompraMasiva {
 		inputStream = new FileInputStream(filename);
 		sc = new Scanner(inputStream, "UTF-8");
 
-		// BufferedReader br = new BufferedReader(fr);
-		// String linea = br.readLine();
+
 		int totalCompras = 0;
+		int insertCab, insertDet;
 		while (sc.hasNextLine()) {
 			// while ((linea = br.readLine()) != null) {
 			String linea = sc.nextLine();
 			totalCompras++;
 			CompraCabecera compra = parseCompra(linea);
-			em.persist(compra);
+			insertCab = session.insert("insertCompraCab", compra);
 			Float montoTotal = 0.0F;
 			for (CompraDetalle det : compra.getDetalles()) {
 				det.setCompraCabecera(compra);
 				montoTotal = (det.getProducto().getPrecioCompra() * det.getCantidad()) + montoTotal;
-				em.persist(det);
+				insertCab = session.insert("insertCompraDet", det);
 			}
 			compra.setFecha(new java.util.Date());
 			compra.setMonto(montoTotal);
-			em.merge(compra);
+			int insertSuccess = session.update("updateCompraCab", compra);
+			//em.merge(compra);
 			log.info("Registrada compra nro: " + totalCompras + " con Id nro: " + compra.getId_compraCabecera()
 					+ " Proveedor: " + compra.getProveedor().getNombre());
 		}
@@ -194,27 +197,7 @@ public class CompraMasiva {
 		System.out.println(
 				"MEMORIA USADA= " + ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / mb));
 		System.out.println("MEMORIA LIBRE= " + ((Runtime.getRuntime().freeMemory()) / mb));
-		try {
-			tx.commit();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (RollbackException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (HeuristicMixedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (HeuristicRollbackException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SystemException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		return;
 	}
 
 	public CompraCabecera parseCompra(String s) {

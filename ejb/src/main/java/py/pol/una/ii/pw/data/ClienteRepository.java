@@ -7,9 +7,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
+import org.apache.ibatis.session.SqlSession;
+
 import java.util.List;
 
 import py.pol.una.ii.pw.model.Cliente;
+import py.pol.una.ii.pw.model.Proveedor;
+import py.pol.una.ii.pw.util.MyBatisSqlSessionFactory;
 
 @ApplicationScoped
 public class ClienteRepository {
@@ -18,18 +23,21 @@ public class ClienteRepository {
     private EntityManager em;
 
     public Cliente findById(Long id) {
-        return em.find(Cliente.class, id);
+    	SqlSession session = MyBatisSqlSessionFactory.getSqlSessionFactory().openSession();
+        Cliente cli = session.selectOne("getClienteById",id);
+        return cli;
+       // return em.find(Cliente.class, id);
     }
 
     public List<Cliente> findAllOrderedByName() {
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Cliente> criteria = cb.createQuery(Cliente.class);
-        Root<Cliente> cliente = criteria.from(Cliente.class);
-        // Swap criteria statements if you would like to try out type-safe criteria queries, a new
-        // feature in JPA 2.0
-        // criteria.select(cliente).orderBy(cb.asc(cliente.get(Cliente_.name)));
-        criteria.select(cliente).orderBy(cb.asc(cliente.get("nombre")));
-        return em.createQuery(criteria).getResultList();
+    	SqlSession session = MyBatisSqlSessionFactory.getSqlSessionFactory().openSession();
+        List<Cliente> clientes = session.selectList("selectAllClientes", null);
+        return clientes;
+//        CriteriaBuilder cb = em.getCriteriaBuilder();
+//        CriteriaQuery<Cliente> criteria = cb.createQuery(Cliente.class);
+//        Root<Cliente> cliente = criteria.from(Cliente.class);
+//        criteria.select(cliente).orderBy(cb.asc(cliente.get("nombre")));
+//        return em.createQuery(criteria).getResultList();
     }
 
 }

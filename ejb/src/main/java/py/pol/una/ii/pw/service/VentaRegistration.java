@@ -4,6 +4,7 @@ import py.pol.una.ii.pw.model.CompraCabecera;
 import py.pol.una.ii.pw.model.CompraDetalle;
 import py.pol.una.ii.pw.model.VentaCabecera;
 import py.pol.una.ii.pw.model.VentaDetalle;
+import py.pol.una.ii.pw.util.MyBatisSqlSessionFactory;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -24,6 +25,8 @@ import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
+
+import org.apache.ibatis.session.SqlSession;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -57,6 +60,7 @@ public class VentaRegistration {
 	
 	private int contador=0;
 	private Transaction transaction;
+	private SqlSession session;
     
 	 public void iniciarVenta(VentaCabecera ventaCab) {
 		///// prueba
@@ -256,6 +260,7 @@ public class VentaRegistration {
 	@PostConstruct
 	public void postConstruct() throws NamingException {
 		InitialContext ctx = new InitialContext();
+    	session = MyBatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
 	        // JBoss
 	        tm= (TransactionManager)

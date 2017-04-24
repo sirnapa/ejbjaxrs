@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias alias="Producto" type="py.pol.una.ii.pw.model.Producto" />
+		<typeAlias alias="CompraCabecera" type="py.pol.una.ii.pw.model.CompraCabecera" />
+		<typeAlias alias="CompraDetalle" type="py.pol.una.ii.pw.model.CompraDetalle" />
+		<typeAlias alias="VentaCabecera" type="py.pol.una.ii.pw.model.VentaCabecera" />
+		<typeAlias alias="VentaDetalle" type="py.pol.una.ii.pw.model.VentaDetalle" />
+		<typeAlias alias="Proveedor" type="py.pol.una.ii.pw.model.Proveedor" />
+		<typeAlias alias="Cliente" type="py.pol.una.ii.pw.model.Cliente" />
+	</typeAliases>
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="MANAGED">
+			</transactionManager>
+			<dataSource type="JNDI">
+				<property name="data_source" value="PostgresDS" />
+			</dataSource>
+		</environment>
+	</environments>
+	<mappers>
+		<mapper resource="MyBatisProducto.xml" />
+		<mapper resource="MyBatisCompraCabecera.xml" />
+		<mapper resource="MyBatisCompraDetalle.xml" />
+		<mapper resource="MyBatisProveedor.xml" />
+		<mapper resource="MyBatisCliente.xml" />
+		<mapper resource="MyBatisVentaCabecera.xml" />
+		<mapper resource="MyBatisVentaDetalle.xml" />
+	</mappers>
+</configuration>

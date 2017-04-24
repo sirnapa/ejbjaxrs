@@ -16,9 +16,16 @@
  */
 package py.pol.una.ii.pw.rest;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -39,9 +46,12 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.ibatis.session.SqlSession;
+
 import py.pol.una.ii.pw.data.ProductoRepository;
 import py.pol.una.ii.pw.model.Producto;
 import py.pol.una.ii.pw.service.ProductoRegistration;
+import py.pol.una.ii.pw.util.MyBatisSqlSessionFactory;
 
  
 @Path("/productos")
@@ -96,31 +106,50 @@ public class ProductoResourceRESTService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createProducto(Producto producto) {
-
-        Response.ResponseBuilder builder = null;
-
-        try {
-
-            registration.register(producto);
-
-            // Create an "ok" response
-            builder = Response.ok();
-        } catch (ConstraintViolationException ce) {
-            // Handle bean validation issues
-            builder = createViolationResponse(ce.getConstraintViolations());
-        } catch (ValidationException e) {
-            // Handle the unique constrain violation
-            Map<String, String> responseObj = new HashMap<String, String>();
-            responseObj.put("email", "Email taken");
-            builder = Response.status(Response.Status.CONFLICT).entity(responseObj);
-        } catch (Exception e) {
-            // Handle generic exceptions
-            Map<String, String> responseObj = new HashMap<String, String>();
-            responseObj.put("error", e.getMessage());
-            builder = Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
-        }
+		Response.ResponseBuilder builder = null;
+		try {
+			registration.register(producto);
+			builder = Response.ok();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			builder = Response.notModified();
+		}
 
         return builder.build();
+    }
+    
+    @POST
+    @Path("/prueba")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public void pruebaArchivo(Producto producto) throws IOException {
+    	int k =5, t=1000;
+	        String ruta = "C:\\Users\\user\\Desktop\\req_"+k+"k_"+t+"t.txt";
+	        File archivo = new File(ruta);
+	        BufferedWriter bw;
+	        Random rand = new Random();
+	        int i = 0;
+	        for (int j =0;j<=2;j++){
+	        while (i<10){
+	        if (archivo.exists()) {
+	        	int fs = (int) (Math.random() * 20) + 8;
+	            bw = new BufferedWriter(new FileWriter(archivo,true));
+	        } else {
+	            bw = new BufferedWriter(new FileWriter(archivo));
+	        }
+	        bw.write(""+i);
+            bw.write("¦");
+            bw.write(""+j);
+            bw.write("¦");
+            bw.write(""+j);
+            bw.write("¦");
+            bw.write(""+i);
+            bw.write("\r\n");
+	        i++;
+	        bw.close();
+	        }
+	        }
     }
 
     /**
@@ -156,6 +185,8 @@ public class ProductoResourceRESTService {
 
         return Response.status(Response.Status.BAD_REQUEST).entity(responseObj);
     }
+    
+    
 
     /**
      * Checks if a member with the same email address is already registered. This is the only way to easily capture the

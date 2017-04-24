@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cliente">
+	<!-- <insert id="insertTest" parameterType="Producto" useGeneratedKeys="true" 
+		keyProperty="id" keyColumn="id"> -->
+	<!-- insert into producto (cantidad,nombre,precioCompra,precioVenta) -->
+	<!-- values (#{cantidad},#{nombre},#{precioCompra},#{precioVenta}) -->
+	<!-- </insert> -->
+	<resultMap type="Cliente" id="ClienteResult">
+		<id property="id" column="id_cliente" />
+		<result property="nombre" column="nombre" />
+		<result property="ci" column="ci" />
+		<result property="saldoDeuda" column="saldodeuda" />
+	</resultMap>
+	<insert id="insertCliente" parameterType="Cliente" timeout="10"
+		useGeneratedKeys="true">
+
+		<selectKey keyProperty="id" resultType="long" order="BEFORE">
+			SELECT nextVal('hibernate_sequence')
+			<!-- or -> SELECT my_sequence.nextVal from dual -->
+		</selectKey>
+
+		insert into cliente (id_cliente,ci,nombre)
+		values
+		(#{id},#{ci},#{nombre})
+
+	</insert>
+	<select id="selectAllClientes" resultMap="ClienteResult">
+		select * from
+		cliente
+	</select>
+	<select id="getClienteById" parameterType='long' resultMap="ClienteResult">
+		SELECT * from cliente
+		WHERE id_cliente = #{id};
+	</select>
+	<delete id="deleteClienteById" parameterType="long">
+		DELETE from
+		cliente WHERE id_cliente = #{id};
+	</delete>
+	<update id="updateCliente" parameterType="Cliente">
+		UPDATE cliente SET
+		nombre = #{nombre},
+		ci = #{ci},
+		saldodeuda = #{saldoDeuda}
+		WHERE id_cliente = #{id};
+	</update>
+</mapper>

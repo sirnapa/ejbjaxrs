@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ventaDetalle" >
+
+<insert id="insertVentaDet" parameterType="VentaDetalle" timeout="10" useGeneratedKeys="true">
+ 
+        <selectKey keyProperty="id_ventaDetalle" resultType="long" order="BEFORE">
+            SELECT nextVal('hibernate_sequence')
+        </selectKey>
+ 
+        insert into ventas_det (id_ventaDetalle,id_producto,id_ventaCabecera, cantidad)
+        values (#{id_ventaDetalle},#{producto.id},#{ventaCabecera.id_ventaCabecera},#{cantidad})
+ 
+    </insert>
+    <select id="selectAllVentaDet" resultType="VentaDetalle">
+            select id_ventaDetalle,id_producto,id_ventaCabecera, cantidad from ventas_det
+    </select>
+</mapper>

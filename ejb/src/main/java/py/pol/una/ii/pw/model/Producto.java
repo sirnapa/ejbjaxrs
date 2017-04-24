@@ -21,7 +21,7 @@ public class Producto implements Serializable{
 	
 	@Id
     @GeneratedValue
-    @Column(name = "id_producto")
+    @Column(name = "id")
     private Long id;
 	
     @NotNull
@@ -29,11 +29,11 @@ public class Producto implements Serializable{
     private String nombre;
     
     @NotNull
-    @Column(name = "precio_venta")
+    @Column(name = "precioventa")
     private Float precioVenta;
     
     @NotNull
-    @Column(name = "precio_compra")
+    @Column(name = "preciocompra")
     private Float precioCompra;
     
     @NotNull
