@@ -108,6 +108,11 @@
 			<artifactId>postgresql</artifactId>
 			<version>42.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.keycloak</groupId>
+			<artifactId>keycloak-client-registration-api</artifactId>
+			<version>3.1.0.Final</version>
+		</dependency>
 	</dependencies>
 
 	<build>
