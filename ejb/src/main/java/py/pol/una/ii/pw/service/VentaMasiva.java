@@ -53,7 +53,7 @@ import py.pol.una.ii.pw.model.VentaDetalle;
 @TransactionManagement(TransactionManagementType.BEAN)
 public class VentaMasiva {
 
-	@Resource(name = "java:/PostgresDS")
+	@Resource(lookup = "java:/WebDS")
 	DataSource datasource;
 
 	@Inject

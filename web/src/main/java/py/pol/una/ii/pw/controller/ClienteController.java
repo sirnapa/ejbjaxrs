@@ -25,7 +25,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import py.pol.una.ii.pw.model.Cliente;
-import py.pol.una.ii.pw.service.ClienteRegistration;
+import py.pol.una.ii.pw.service.ClienteRegistration; 
 
 
 // The @Model stereotype is a convenience mechanism to make this a request-scoped bean that has an

@@ -95,6 +95,7 @@ public class VentaResourceRESTService {
             builder = Response.ok();
         } catch (ConstraintViolationException ce){
         	log.info(ce.getMessage());
+        	builder = Response.notModified();
         }
         return builder.build();
     }
@@ -111,6 +112,7 @@ public class VentaResourceRESTService {
             builder = Response.ok();
         } catch (ConstraintViolationException ce){
         	log.info(ce.getMessage());
+        	builder = Response.notModified();
         }
         return builder.build();
     }
@@ -127,6 +129,7 @@ public class VentaResourceRESTService {
             builder = Response.ok();
         } catch (ConstraintViolationException ce){
         	log.info(ce.getMessage());
+        	builder = Response.notModified();
         }
         return builder.build();
     }
@@ -143,6 +146,7 @@ public class VentaResourceRESTService {
             builder = Response.ok();
         } catch (ConstraintViolationException ce){
         	log.info(ce.getMessage());
+        	builder = Response.notModified();
         }
         return builder.build();
     }
@@ -159,6 +163,7 @@ public class VentaResourceRESTService {
             builder = Response.ok();
         } catch (ConstraintViolationException ce){
         	log.info(ce.getMessage());
+        	builder = Response.notModified();
         }
         return builder.build();
     }

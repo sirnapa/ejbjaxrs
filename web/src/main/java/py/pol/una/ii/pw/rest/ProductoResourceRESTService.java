@@ -118,39 +118,6 @@ public class ProductoResourceRESTService {
 
         return builder.build();
     }
-    
-    @POST
-    @Path("/prueba")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public void pruebaArchivo(Producto producto) throws IOException {
-    	int k =5, t=1000;
-	        String ruta = "C:\\Users\\user\\Desktop\\req_"+k+"k_"+t+"t.txt";
-	        File archivo = new File(ruta);
-	        BufferedWriter bw;
-	        Random rand = new Random();
-	        int i = 0;
-	        for (int j =0;j<=2;j++){
-	        while (i<10){
-	        if (archivo.exists()) {
-	        	int fs = (int) (Math.random() * 20) + 8;
-	            bw = new BufferedWriter(new FileWriter(archivo,true));
-	        } else {
-	            bw = new BufferedWriter(new FileWriter(archivo));
-	        }
-	        bw.write(""+i);
-            bw.write("¦");
-            bw.write(""+j);
-            bw.write("¦");
-            bw.write(""+j);
-            bw.write("¦");
-            bw.write(""+i);
-            bw.write("\r\n");
-	        i++;
-	        bw.close();
-	        }
-	        }
-    }
 
     /**
      * <p>

@@ -19,7 +19,7 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/x
 version="2.0">
 <persistence-unit name="pweb" transaction-type="JTA">
 <provider>org.hibernate.ejb.HibernatePersistence</provider>
-<jta-data-source>java:/PostgresDS</jta-data-source>
+<jta-data-source>java:/WebDS</jta-data-source>
 <properties>
                   <property name="hibernate.hbm2ddl.auto" value="update" />
                   <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>

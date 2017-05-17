@@ -266,6 +266,8 @@ public class VentaRegistration {
 	        tm= (TransactionManager)
 	            ctx.lookup("java:jboss/TransactionManager");
 	    }
-	    catch (Exception e) { }
+	    catch (Exception e) { 
+	    	log.info("Exception:"+e);
+	    }
 	}
 }

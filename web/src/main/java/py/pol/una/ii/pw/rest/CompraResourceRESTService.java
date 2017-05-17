@@ -111,6 +111,7 @@ public class CompraResourceRESTService {
             builder = Response.ok();
         } catch (ConstraintViolationException ce){
         	log.info(ce.getMessage());
+        	builder = Response.notModified();
         }
         return builder.build();
     }
@@ -127,6 +128,7 @@ public class CompraResourceRESTService {
             builder = Response.ok();
         } catch (ConstraintViolationException ce){
         	log.info(ce.getMessage());
+        	builder = Response.notModified();
         }
         return builder.build();
     }
@@ -143,6 +145,7 @@ public class CompraResourceRESTService {
             builder = Response.ok();
         } catch (ConstraintViolationException ce){
         	log.info(ce.getMessage());
+        	builder = Response.notModified();
         }
         return builder.build();
     }
@@ -159,6 +162,7 @@ public class CompraResourceRESTService {
             builder = Response.ok();
         } catch (ConstraintViolationException ce){
         	log.info(ce.getMessage());
+        	builder = Response.notModified();
         }
         return builder.build();
     }
@@ -175,6 +179,7 @@ public class CompraResourceRESTService {
             builder = Response.ok();
         } catch (ConstraintViolationException ce){
         	log.info(ce.getMessage());
+        	builder = Response.notModified();
         }
         return builder.build();
     }
