@@ -77,7 +77,7 @@ public class Injection {
 	@Inject
 	ProductoRegistration registration;
 
-	@Resource(lookup = "java:/WebDS")
+	@Resource(lookup = "java:/PostgresDS")
 	DataSource datasource;
 
 	@POST
