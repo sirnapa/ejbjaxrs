@@ -57,7 +57,7 @@ import py.pol.una.ii.pw.model.CompraDetalle;
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class CompraMasiva {
 
-	@Resource(lookup = "java:/WebDS")
+	@Resource(lookup = "java:/PostgresDS")
 	DataSource datasource;
 
 	@Inject
