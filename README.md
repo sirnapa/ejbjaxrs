@@ -1,6 +1,8 @@
 Trabajo de Pweb Backend 2017
 ==============================================================================================
-Authors: Diego Baez, Nelson Paez
+Authors:
+ - Diego Baez
+ - Nelson Paez
 
 
 EjbJaxRS: Example Using Multiple Java EE 6 Technologies Deployed as an EAR
