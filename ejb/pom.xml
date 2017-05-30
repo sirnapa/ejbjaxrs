@@ -37,6 +37,7 @@
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
+			<scope>provided</scope>
 			<version>2.2.4</version>
 		</dependency>
 		<!-- Declare the APIs we depend on and need for compilation. All of them
