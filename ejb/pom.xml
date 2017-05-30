@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- JBoss, Home of Professional Open Source Copyright 2013, Red Hat, Inc. 
-	and/or its affiliates, and individual contributors by the @authors tag. See 
-	the copyright.txt in the distribution for a full listing of individual contributors. 
-	Licensed under the Apache License, Version 2.0 (the "License"); you may not 
-	use this file except in compliance with the License. You may obtain a copy 
-	of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
-	by applicable law or agreed to in writing, software distributed under the 
-	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
-	OF ANY KIND, either express or implied. See the License for the specific 
+<!-- JBoss, Home of Professional Open Source Copyright 2013, Red Hat, Inc.
+	and/or its affiliates, and individual contributors by the @authors tag. See
+	the copyright.txt in the distribution for a full listing of individual contributors.
+	Licensed under the Apache License, Version 2.0 (the "License"); you may not
+	use this file except in compliance with the License. You may obtain a copy
+	of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required
+	by applicable law or agreed to in writing, software distributed under the
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
+	OF ANY KIND, either express or implied. See the License for the specific
 	language governing permissions and limitations under the License. -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -39,10 +39,10 @@
 			<artifactId>gson</artifactId>
 			<version>2.2.4</version>
 		</dependency>
-		<!-- Declare the APIs we depend on and need for compilation. All of them 
+		<!-- Declare the APIs we depend on and need for compilation. All of them
 			are provided by JBoss AS 7 -->
 
-		<!-- Import the EJB API, we use provided scope as the API is included in 
+		<!-- Import the EJB API, we use provided scope as the API is included in
 			JBoss AS 7 -->
 		<dependency>
 			<groupId>org.jboss.spec.javax.ejb</groupId>
@@ -50,7 +50,7 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- Import the CDI API, we use provided scope as the API is included in 
+		<!-- Import the CDI API, we use provided scope as the API is included in
 			JBoss AS 7 -->
 		<dependency>
 			<groupId>javax.enterprise</groupId>
@@ -58,7 +58,7 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- Import the JPA API, we use provided scope as the API is included in 
+		<!-- Import the JPA API, we use provided scope as the API is included in
 			JBoss AS 7 -->
 		<dependency>
 			<groupId>org.hibernate.javax.persistence</groupId>
@@ -84,7 +84,7 @@
 		</dependency>
 
 		<!-- Optional, but highly recommended -->
-		<!-- Arquillian allows you to test enterprise code such as EJBs and Transactional(JTA) 
+		<!-- Arquillian allows you to test enterprise code such as EJBs and Transactional(JTA)
 			JPA from JUnit/TestNG -->
 		<dependency>
 			<groupId>org.jboss.arquillian.junit</groupId>
@@ -118,6 +118,12 @@
 			<artifactId>rest-assured</artifactId>
 			<version>3.0.0</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.transaction/jta -->
+		<dependency>
+		    <groupId>javax.transaction</groupId>
+		    <artifactId>jta</artifactId>
+		    <version>1.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -136,9 +142,9 @@
 
 	<profiles>
 		<profile>
-			<!-- The default profile skips all tests, though you can tune it to run 
+			<!-- The default profile skips all tests, though you can tune it to run
 				just unit tests based on a custom pattern -->
-			<!-- Seperate profiles are provided for running all tests, including Arquillian 
+			<!-- Seperate profiles are provided for running all tests, including Arquillian
 				tests that execute in the specified container -->
 			<id>default</id>
 			<activation>
@@ -158,9 +164,9 @@
 		</profile>
 
 		<profile>
-			<!-- An optional Arquillian testing profile that executes tests in your 
+			<!-- An optional Arquillian testing profile that executes tests in your
 				JBoss AS instance -->
-			<!-- This profile will start a new JBoss AS instance, and execute the 
+			<!-- This profile will start a new JBoss AS instance, and execute the
 				test, shutting it down when done -->
 			<!-- Run with: mvn clean test -Parq-jbossas-managed -->
 			<id>arq-jbossas-managed</id>
@@ -174,7 +180,7 @@
 		</profile>
 
 		<profile>
-			<!-- An optional Arquillian testing profile that executes tests in a remote 
+			<!-- An optional Arquillian testing profile that executes tests in a remote
 				JBoss AS instance -->
 			<!-- Run with: mvn clean test -Parq-jbossas-remote -->
 			<id>arq-jbossas-remote</id>
