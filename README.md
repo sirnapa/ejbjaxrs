@@ -4,7 +4,7 @@ Authors:
  - Diego Baez
  - Nelson Paez
 
-Trabajo final
+Trabajo final 2017
 
 EjbJaxRS: Example Using Multiple Java EE 6 Technologies Deployed as an EAR
 -----------
