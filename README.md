@@ -1,5 +1,10 @@
-EjbJaxRS: Example Using Multiple Java EE 6 Technologies Deployed as an EAR
+Trabajo de Pweb Backend
 ==============================================================================================
+Authors: Diego Baez, Nelson Paez
+
+
+EjbJaxRS: Example Using Multiple Java EE 6 Technologies Deployed as an EAR
+-----------
 Author: Pete Muir
 Level: Intermediate
 Technologies: EAR
@@ -10,18 +15,18 @@ Source: <https://github.com/jboss-jdf/jboss-as-quickstart/>
 What is it?
 -----------
 
-This is your project! It is a sample, deployable Maven 3 project to help you get your foot in the door developing with Java EE 6 on JBoss Enterprise Application Platform 6 or JBoss AS 7. 
+This is your project! It is a sample, deployable Maven 3 project to help you get your foot in the door developing with Java EE 6 on JBoss Enterprise Application Platform 6 or JBoss AS 7.
 
-This project is setup to allow you to create a compliant Java EE 6 application using JSF 2.0, CDI 1.0, EJB 3.1, JPA 2.0 and Bean Validation 1.0. It includes a persistence unit and some sample persistence and transaction code to introduce you to database access in enterprise Java. 
+This project is setup to allow you to create a compliant Java EE 6 application using JSF 2.0, CDI 1.0, EJB 3.1, JPA 2.0 and Bean Validation 1.0. It includes a persistence unit and some sample persistence and transaction code to introduce you to database access in enterprise Java.
 
 System requirements
 -------------------
 
 All you need to build this project is Java 6.0 (Java SDK 1.6) or better, Maven 3.0 or better.
 
-The application this project produces is designed to be run on JBoss Enterprise Application Platform 6 or JBoss AS 7. 
+The application this project produces is designed to be run on JBoss Enterprise Application Platform 6 or JBoss AS 7.
 
- 
+
 Configure Maven
 ---------------
 
@@ -37,7 +42,7 @@ Start JBoss Enterprise Application Platform 6 or JBoss AS 7 with the Web Profile
         For Linux:   JBOSS_HOME/bin/standalone.sh
         For Windows: JBOSS_HOME\bin\standalone.bat
 
- 
+
 Build and Deploy the Quickstart
 -------------------------
 
@@ -52,7 +57,7 @@ _NOTE: The following build command assumes you have configured your Maven user s
 4. This will deploy `target/EjbJaxRS.ear` to the running instance of the server.
 
 
-Access the application 
+Access the application
 ---------------------
 
 The application will be running at the following URL: <http://localhost:8080/EjbJaxRS-web>.
@@ -75,10 +80,10 @@ Undeploy the Archive
         mvn jboss-as:undeploy
 
 
-Run the Arquillian Tests 
+Run the Arquillian Tests
 -------------------------
 
-This quickstart provides Arquillian tests. By default, these tests are configured to be skipped as Arquillian tests require the use of a container. 
+This quickstart provides Arquillian tests. By default, these tests are configured to be skipped as Arquillian tests require the use of a container.
 
 _NOTE: The following commands assume you have configured your Maven user settings. If you have not, you must include Maven setting arguments on the command line. See [Run the Arquillian Tests](../README.md#run-the-arquillian-tests) for complete instructions and additional options._
 
@@ -86,7 +91,7 @@ _NOTE: The following commands assume you have configured your Maven user setting
 2. Open a command line and navigate to the root directory of this quickstart.
 3. Type the following command to run the test goal with the following profile activated:
 
-        mvn clean test -Parq-jbossas-remote 
+        mvn clean test -Parq-jbossas-remote
 
 
 Investigate the Console Output
@@ -115,7 +120,7 @@ You should see messages similar to the following:
 
 Run the Quickstart in JBoss Developer Studio or Eclipse
 -------------------------------------
-You can also start the server and deploy the quickstarts from Eclipse using JBoss tools. For more information, see [Use JBoss Developer Studio or Eclipse to Run the Quickstarts](../README.md#use-jboss-developer-studio-or-eclipse-to-run-the-quickstarts) 
+You can also start the server and deploy the quickstarts from Eclipse using JBoss tools. For more information, see [Use JBoss Developer Studio or Eclipse to Run the Quickstarts](../README.md#use-jboss-developer-studio-or-eclipse-to-run-the-quickstarts)
 
 
 Debug the Application
