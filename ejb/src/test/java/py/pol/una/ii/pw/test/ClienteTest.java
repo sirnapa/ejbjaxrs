@@ -28,58 +28,55 @@ import static io.restassured.RestAssured.given;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ProductoTest extends FunctionalTest{
+public class ClienteTest extends FunctionalTest{
 
 	
     @Test
-    public void PingTestProducto() {
-        given().when().get("/productos").then().statusCode(200);
+    public void PingTestClientes() {
+        given().when().get("/clientes").then().statusCode(200);
     }
     
 	@Test
 	public final void listarTodo() {
-        given().when().get("/productos").then()
-        .body("nombre", Matchers.hasItem(Matchers.equalTo("Producto 1")));
+        given().when().get("/clientes").then()
+        .body("nombre", Matchers.hasItem(Matchers.equalTo("Juan")));
 	}
 	
 	@Test
-    public void productoPost() {
-        Map<String,String> producto = new HashMap<String, String>();
-        producto.put("id", "null");
-        producto.put("nombre", "audi");
-        producto.put("precioVenta", "10000");
-        producto.put("precioCompra", "20000");
-        producto.put("cantidad", "5");
+    public void clientePost() {
+        Map<String,String> cliente = new HashMap<String, String>();
+        cliente.put("id", "null");
+        cliente.put("nombre", "Jose");
+        cliente.put("ci", "10000");
+        cliente.put("saldoDeuda", "20000");
 
         given()
         .contentType("application/json")
-        .body(producto)
-        .when().post("/productos").then()
+        .body(cliente)
+        .when().post("/clientes").then()
         .statusCode(200);
     }
 	
 	@Test
-    public void productoDelete() {
+    public void clienteDelete() {
         given().pathParam("prodID", 579402)
         .when().delete("/productos/{prodID}").then()
         .statusCode(204);
 
     }
 	
-	@Test
-    public void productoUpdate() {
-        Map<String,String> producto = new HashMap<String, String>();
-        producto.put("id", "579370");
-        producto.put("nombre", "test cambio");
-        producto.put("precioVenta", "10000");
-        producto.put("precioCompra", "20000");
-        producto.put("cantidad", "5");
-
-        given().pathParam("prodID", 579402)
-        .contentType("application/json")
-        .body(producto)
-        .when().put("/productos/{prodID}").then()
-        .statusCode(204);
-
-    }
+//	@Test
+//    public void clienteUpdate() {
+//        Map<String,String> cliente = new HashMap<String, String>();
+//        cliente.put("id", "579435");
+//        cliente.put("nombre", "Jose");
+//        cliente.put("ci", "10000");
+//        cliente.put("saldoDeuda", "20000");
+//
+//        given().pathParam("prodID", 2)
+//        .contentType("application/json")
+//        .body(cliente)
+//        .when().put("/clientes/{prodID}").then()
+//        .statusCode(204);
+//    }
 }
