@@ -15,7 +15,7 @@
 			<transactionManager type="MANAGED">
 			</transactionManager>
 			<dataSource type="JNDI">
-				<property name="data_source" value="WebDS" />
+				<property name="data_source" value="PostgresDS" />
 			</dataSource>
 		</environment>
 	</environments>
